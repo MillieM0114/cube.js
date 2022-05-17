@@ -64,11 +64,11 @@ jobs:
           # default key
           key: cubesql-${{ runner.OS }}-x86_64-unknown-linux-gnu-16
           sharedKey: cubesql-${{ runner.OS }}-x86_64-unknown-linux-gnu-16
-      - name: Install tarpaulin@0.19.1
+      - name: Install tarpaulin@0.20.0
         uses: actions-rs/cargo@v1
         with:
           command: install
-          args: cargo-tarpaulin --version 0.19.1
+          args: cargo-tarpaulin --version 0.20.0
       - name: Unit tests
         env:
           CUBESQL_TESTING_CUBE_TOKEN: ${{ secrets.CUBESQL_TESTING_CUBE_TOKEN }}
