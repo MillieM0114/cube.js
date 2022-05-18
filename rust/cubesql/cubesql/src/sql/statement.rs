@@ -544,6 +544,43 @@ impl<'ast> Visitor<'ast> for ToTimestampReplacer {
     }
 }
 
+#[derive(Debug)]
+pub struct SensitiveDataSanitizer {}
+
+impl SensitiveDataSanitizer {
+    pub fn new() -> Self {
+        Self {}
+    }
+
+    pub fn replace(mut self, stmt: &ast::Statement) -> ast::Statement {
+        let mut result = stmt.clone();
+
+        self.visit_statement(&mut result);
+
+        result
+    }
+}
+
+impl<'ast> Visitor<'ast> for SensitiveDataSanitizer {
+    fn visit_identifier(&mut self, identifier: &mut ast::Ident) {
+        *identifier = ast::Ident {
+            value: "XXX".to_string(),
+            quote_style: identifier.quote_style,
+        };
+    }
+
+    fn visit_value(&mut self, val: &mut ast::Value) {
+        match val {
+            ast::Value::SingleQuotedString(str)
+            | ast::Value::DoubleQuotedString(str)
+            | ast::Value::NationalStringLiteral(str) => {
+                *str = "XXX".to_string();
+            }
+            _ => (),
+        }
+    }
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;
