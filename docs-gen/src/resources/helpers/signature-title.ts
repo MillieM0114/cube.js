@@ -9,7 +9,7 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
   const md = [];
 
   if (showSymbol) {
-    md.push(`${memberSymbol.call(this)} `);
+    md.push(`\n${memberSymbol.call(this)}typescript\n`);
   }
 
   // eg: `static`
@@ -20,7 +20,7 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
         .join(' ')
         .toLowerCase()
     );
-    md.push(' ');
+    // md.push(' ');
   }
 
   if (this.name === '__get') {
@@ -28,7 +28,7 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
   } else if (this.name === '__set') {
     md.push(`**set ${this.parent.name}**`);
   } else if (this.name !== '__call') {
-    md.push(`**${this.name}**`);
+    md.push(this.name);
   }
   if (this.typeParameters) {
     md.push(`‹${this.typeParameters.map((typeParameter) => `**${typeParameter.name}**`).join(', ')}›`);
@@ -40,11 +40,11 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
           if (param.flags.isRest) {
             paramsmd.push('...');
           }
-          paramsmd.push(`**${param.name}`);
+          paramsmd.push(`${param.name}`);
           if (param.flags.isOptional) {
             paramsmd.push('?');
           }
-          paramsmd.push(`**: ${paramTypeToString(param)}`);
+          paramsmd.push(`: ${paramTypeToString(param)}`);
           return paramsmd.join('');
         })
         .join(', ')
@@ -58,8 +58,13 @@ export function signatureTitle(this: SignatureReflection, showSymbol: boolean = 
       const declarations = this.type.declaration.signatures?.map((sig) => signatureTitle.call(sig, false, true));
       md.push(declarations.join(' | ').replace(/\n/, ''));
     } else {
-      md.push(` *${type.call(this.type)}*`);
+      md.push(` ${type.call(this.type)}`);
     }
   }
+
+  if (showSymbol) {
+    md.push(`\n${memberSymbol.call(this)}\n`);
+  }
+
   return md.join('') + '\n';
 }
