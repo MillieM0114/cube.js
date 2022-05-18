@@ -8,6 +8,7 @@ on:
       - 'guides/**'
     branches:
       - 'master'
+      - 'guides-redirect'
 
 jobs:
   react-pivot-table:
